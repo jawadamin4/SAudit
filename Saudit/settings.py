@@ -28,6 +28,10 @@ DEBUG = False
 
 ALLOWED_HOSTS = ["saudit-production.up.railway.app"]
 
+CORS_ALLOWED_ORIGINS = [
+    'saudit-production.up.railway.app',
+]
+
 
 
 
@@ -38,6 +42,7 @@ INSTALLED_APPS = [
     'colorfield',
     'import_export',
     # 'column_toggle',
+    'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -58,6 +63,7 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
