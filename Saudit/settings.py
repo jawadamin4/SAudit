@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-b*m5q@a(9@j1u28y-!n5vp_dl!*@shz-kjp3=p&a@qp(t)(3qo
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ["saudit-production.up.railway.app"]
+ALLOWED_HOSTS = ["saudit-production.up.railway.app","127.0.0.1"]
 
 
 
@@ -39,14 +39,13 @@ INSTALLED_APPS = [
     'colorfield',
     'import_export',
     # 'column_toggle',
-    'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'whitenose.runserver_nostatic',
+    'whitenoise.runserver_nostatic',
     'audit_universe',
     'risk_assessment_setup',
     'risk_assessment',
@@ -58,10 +57,10 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.whiteNoiseMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
