@@ -28,6 +28,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["saudit-production.up.railway.app","127.0.0.1"]
 
+CSRF_TRUSTED_ORIGINS = ['saudit-production.up.railway.app']
+
 
 
 
