@@ -1,1 +1,3 @@
 web: gunicorn Saudit.wsgi
+
+release: python manage.py migrate
