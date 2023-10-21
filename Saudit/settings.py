@@ -28,7 +28,7 @@ DEBUG = False
 
 ALLOWED_HOSTS = ["saudit-production.up.railway.app"]
 
-CSRF_TRUSTED_ORIGINS = [‘https://saudit-production.up.railway.app’]
+
 
 
 # Application definition
@@ -139,7 +139,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
-
+CSRF_TRUSTED_ORIGINS = [‘https://saudit-production.up.railway.app’]
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 X_FRAME_OPTIONS = "SAMEORIGIN"
