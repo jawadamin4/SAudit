@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'whitenose.runserver_nostatic',
+    #'whitenose.runserver_nostatic',
     'audit_universe',
     'risk_assessment_setup',
     'risk_assessment',
