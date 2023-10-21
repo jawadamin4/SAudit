@@ -28,6 +28,8 @@ DEBUG = False
 
 ALLOWED_HOSTS = ["saudit-production.up.railway.app"]
 
+CSRF_TRUSTED_ORIGINS = [‘https://saudit-production.up.railway.app’]
+
 
 # Application definition
 
