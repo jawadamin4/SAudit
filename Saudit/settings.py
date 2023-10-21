@@ -145,11 +145,3 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 X_FRAME_OPTIONS = "SAMEORIGIN"
 SILENCED_SYSTEM_CHECKS = ["security.W019"]
 
-location / {
-    proxy_pass http://localhost:8000;
-    proxy_set_header Host $http_host;
-    proxy_redirect off;
-    proxy_set_header X-Forwarded-For $remote_addr;
-    proxy_set_header X-Forwarded-Proto $scheme;
-    client_max_body_size 20m;
-}
