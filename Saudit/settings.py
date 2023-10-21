@@ -29,7 +29,7 @@ DEBUG = False
 ALLOWED_HOSTS = ["saudit-production.up.railway.app"]
 
 CORS_ALLOWED_ORIGINS = [
-    'saudit-production.up.railway.app',
+    'https://saudit-production.up.railway.app',
 ]
 
 
