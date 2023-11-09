@@ -1,4 +1,4 @@
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 from django.db import models
 from .models import StartAudit, AuditDepartment
@@ -7,7 +7,7 @@ from fieldwork2.models import AuditInProgress
 
 def get_risk_assessment(total_residual_score, count):
     if total_residual_score is None:
-        return 'No Data' 
+        return 'No Data'
     else:
         risk_assessment_value = total_residual_score / count
         if risk_assessment_value <= -1:
@@ -29,11 +29,18 @@ def get_strategic_importance(strategic_importance_score, count_2):
         else:
             return 'Low'
 
-@receiver(post_save, sender=StartAudit)
-def create_audit_departments(sender, instance, created, **kwargs):
-    if created:
-        audit_year = instance.year
+
+@receiver(pre_save, sender=StartAudit)
+def update_or_create_audit_departments(sender, instance, **kwargs):
+    # Get the original instance from the database
+    original_instance = StartAudit.objects.filter(pk=instance.pk).first()
+
+    # Check if it's a new instance or the 'level' has changed
+    if not original_instance or original_instance.level != instance.level:
+        # If the 'level' has changed or it's a new instance, delete existing AuditDepartments
+        AuditDepartment.objects.filter(start_audit=instance).delete()
         level_type = instance.level
+        audit_year = instance.year
         departments = []
         if level_type == 'company':
             departments = RiskAssessment.objects.values_list('company', flat=True).distinct()
@@ -55,14 +62,31 @@ def create_audit_departments(sender, instance, created, **kwargs):
             departments = RiskAssessment.objects.values_list('major_process', flat=True).distinct()
         elif level_type == 'sub_process':
             departments = RiskAssessment.objects.values_list('sub_process', flat=True).distinct()
+
         for department in departments:
-            total_residual_score = RiskAssessment.objects.filter(**{level_type: department}).aggregate(models.Sum('residual_score'))['residual_score__sum']
+            total_residual_score = \
+                RiskAssessment.objects.filter(**{level_type: department}).aggregate(models.Sum('residual_score'))[
+                    'residual_score__sum']
             count = RiskAssessment.objects.filter(**{level_type: department}).count()
             risk_assessment = get_risk_assessment(total_residual_score, count)
-            strategic_importance_score = StrategicImportance.objects.filter(**{level_type: department}).aggregate(models.Sum('strategic_importance_score'))['strategic_importance_score__sum']
+            strategic_importance_score = StrategicImportance.objects.filter(**{level_type: department}).aggregate(
+                models.Sum('strategic_importance_score'))['strategic_importance_score__sum']
             count_2 = StrategicImportance.objects.filter(**{level_type: department}).count()
             strategic_importance = get_risk_assessment(strategic_importance_score, count_2)
-            AuditDepartment.objects.get_or_create(start_audit=instance, level_type=level_type, level_name=department, audit_year=audit_year, residual_score=total_residual_score or 0, count=count, risk_assessment=risk_assessment, strategic_importance_score=strategic_importance_score or 0, count_2=count_2, strategic_importance=strategic_importance)
+
+            # Create new entries with the correct level name
+            AuditDepartment.objects.create(
+                start_audit=instance,
+                level_type=level_type,
+                level_name=department,
+                audit_year=audit_year,
+                residual_score=total_residual_score or 0,
+                count=count,
+                risk_assessment=risk_assessment,
+                strategic_importance_score=strategic_importance_score or 0,
+                count_2=count_2,
+                strategic_importance=strategic_importance
+            )
 
 @receiver(post_save, sender=AuditDepartment)
 def create_or_update_rcm(sender, instance, created, **kwargs):
