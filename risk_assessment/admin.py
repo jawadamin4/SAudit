@@ -8,15 +8,9 @@ from import_export.admin import ImportExportModelAdmin
 class RiskAssessmentAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     readonly_fields = ('overall_inherent_risk_rating', 'overall_control_rating', 'residual_risk_rating')
     exclude = ('risk_score', 'control_score', 'residual_score')
-
-    # Define a custom method to display selected TypeOfRisk values
-    def display_type_of_risk(self, obj):
-        return ", ".join([str(type_of_risk) for type_of_risk in obj.type_of_risk.all()])
-
-    display_type_of_risk.short_description = "Type of Risk"  # Column header name
     list_display = (
     'department', 'company', 'country', 'region', 'city', 'branch', 'division', 'function', 'major_process',
-    'sub_process', 'risk_details', 'risk_owner', 'display_type_of_risk', 'impact', 'likelihood', 'overall_inherent_risk_rating',
+    'sub_process', 'risk_details', 'risk_owner', 'type_of_risk', 'impact', 'likelihood', 'overall_inherent_risk_rating',
     'response_strategy', 'response_action', 'type_of_control', 'control_frequency', 'control_owner', 'control_design',
     'effectiveness', 'overall_control_rating', 'residual_risk_rating')
     list_display_links = ('department',)

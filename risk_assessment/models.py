@@ -16,13 +16,9 @@ class RiskAssessment(models.Model):
     sub_process = models.ForeignKey(SubProcess, on_delete=models.SET_NULL, null=True, blank=False)
     risk_details = models.TextField(null=True, blank=False)
     risk_owner = models.ForeignKey(RiskOwner, on_delete=models.SET_NULL, null=True, blank=True)
-    type_of_risk = models.ManyToManyField(TypeOfRisk, null=True, blank=True)
-    impact = models.CharField(max_length=100, null=True, blank=False,
-                              choices=[('Very Low', 'Very Low'), ('Low', 'Low'), ('Medium', 'Medium'), ('High', 'High'),
-                                       ('Critical', 'Critical')])
-    likelihood = models.CharField(max_length=100, null=True, blank=False,
-                                  choices=[('Rare', 'Rare'), ('Unlikely', 'Unlikely'), ('Likely', 'Likely'),
-                                           ('Possible', 'Possible'), ('Certain', 'Certain')])
+    type_of_risk = models.ForeignKey(TypeOfRisk, on_delete=models.SET_NULL, null=True, blank=True)
+    impact = models.CharField(max_length=100, null=True, blank=False, choices=[('Rare', 'Rare'), ('Unlikely', 'Unlikely'), ('Likely', 'Likely'), ('Possible', 'Possible'), ('Certain', 'Certain')])
+    likelihood = models.CharField(max_length=100, null=True, blank=False, choices=[('Very Low', 'Very Low'), ('Low', 'Low'), ('Medium', 'Medium'), ('High', 'High'), ('Critical', 'Critical')])
     risk_score = models.CharField(max_length=100, null=True, blank=True)
     overall_inherent_risk_rating = models.CharField(max_length=100, null=True, blank=True)
     response_strategy = models.ForeignKey(ResponseStrategy, on_delete=models.SET_NULL, null=True, blank=True)

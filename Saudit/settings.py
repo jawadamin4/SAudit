@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'colorfield',
     'import_export',
     # 'column_toggle',
-    'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -87,8 +86,8 @@ TEMPLATES = [
         },
     },
 ]
-ASGI_APPLICATION = 'Saudit.asgi.application'
-# WSGI_APPLICATION = 'Saudit.wsgi.application'
+
+WSGI_APPLICATION = 'Saudit.wsgi.application'
 
 
 # Database
