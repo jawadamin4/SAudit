@@ -110,8 +110,9 @@
         document.addEventListener('DOMContentLoaded', function () {
             const roomName = document.querySelector('#room-name').textContent;
             const chatSocket = new WebSocket(
-                `wss://saudit-production.up.railway.app/ws/chat/${roomName}/`
-);
+                `ws://${window.location.host}/ws/chat/${roomName}/`
+            );
+
             let messageContainer = document.querySelector('#id_chat_item_container');
             let oldestMessageId = null;
 
