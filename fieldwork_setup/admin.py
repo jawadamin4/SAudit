@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import InformationRequired, ManagementComments
+from .models import ManagementComments,Informationrequest
 
-admin.site.register(InformationRequired)
+
 admin.site.register(ManagementComments)
+admin.site.register(Informationrequest)

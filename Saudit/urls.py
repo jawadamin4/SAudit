@@ -15,13 +15,16 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from fieldwork2.views import upload_requirements, upload_success
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path("", include("fieldwork2.urls")),
+    path('upload-requirements/<int:audit_program_id>/', upload_requirements, name='upload_requirements'),
+    path('upload-requirements/<int:audit_program_id>/upload_success/',upload_success, name='upload_success'),
 ]
-
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

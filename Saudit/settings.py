@@ -37,6 +37,7 @@ CSRF_TRUSTED_ORIGINS = ['https://saudit-production.up.railway.app']
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
     'admin_interface',
     'colorfield',
     'import_export',
@@ -48,6 +49,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'whitenoise.runserver_nostatic',
+    'channels',
     'audit_universe',
     'risk_assessment_setup',
     'risk_assessment',
@@ -56,6 +58,7 @@ INSTALLED_APPS = [
     'fieldwork2',
     'fieldwork_setup',
 ]
+SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -87,9 +90,14 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'Saudit.wsgi.application'
+# WSGI_APPLICATION = 'Saudit.wsgi.application'
+ASGI_APPLICATION = 'Saudit.asgi.application'
 
-
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+    },
+}
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
@@ -128,6 +136,13 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'  # Replace with your SMTP server
+EMAIL_PORT = 587  # Use the appropriate port for your SMTP server
+EMAIL_USE_TLS = True  # Use TLS or False for SSL
+EMAIL_HOST_USER = 'jawadamin4567@gmail.com'  # Replace with your email address
+EMAIL_HOST_PASSWORD = 'yvno rpkv hdjy tgiz'  # Replace with your email password
 
 
 # Internationalization
