@@ -4,9 +4,10 @@ from django.urls import reverse
 from audit_plan_setup.models import Auditor
 from django.template.loader import render_to_string
 from risk_assessment.models import RiskAssessment
-from fieldwork_setup.models import ManagementComments,Informationrequest
+from fieldwork_setup.models import ManagementComments, Informationrequest
 from django.core.mail import send_mail, EmailMultiAlternatives
 from django.conf import settings
+
 
 class InformationRequired(models.Model):
     audit_program = models.ForeignKey("AuditInProgress", on_delete=models.CASCADE, related_name="requirements")
@@ -58,8 +59,6 @@ class AuditInProgress(models.Model):
         ordering = ['risk']
 
 
-
-
 class AuditPorgram(models.Model):
     audit_in_progress = models.ForeignKey(AuditInProgress, on_delete=models.SET_NULL, null=True, blank=False)
     risk_details = models.CharField(max_length=100, null=True, blank=True)
@@ -69,7 +68,7 @@ class AuditPorgram(models.Model):
     sample_size = models.PositiveIntegerField(null=True, blank=True, default=0)
     auditee_email = models.EmailField(max_length=254)
     information_required = models.ManyToManyField(Informationrequest, blank=True)
-    create_chatroom = models.CharField(max_length=10, null=True,blank=True)
+    create_chatroom = models.CharField(max_length=10, null=True, blank=True)
     test_result = models.CharField(max_length=100, null=True, blank=True)
     move_to_issue_control = models.CharField(max_length=100, choices=[('Yes', 'Yes'), ('No', 'No')], null=True,
                                              blank=True)
@@ -107,7 +106,6 @@ class AuditPorgram(models.Model):
 
     def __str__(self) -> str:
         return f" "
-
 
 
 class ChatMessage(models.Model):
