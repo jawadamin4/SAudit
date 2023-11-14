@@ -7,7 +7,7 @@ from django.http import JsonResponse
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 
-
+@login_required()
 def upload_requirements(request, audit_program_id):
     auditinProgress = AuditInProgress.objects.get(id=audit_program_id)
     print(auditinProgress.level_name)
