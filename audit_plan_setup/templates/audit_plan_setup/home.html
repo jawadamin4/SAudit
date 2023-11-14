@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    {% load static %}
+    <!-- Link to Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+
+        /* Common button styles */
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Register as Auditor button */
+        .btn-register-auditor {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        /* Register as Auditee button */
+        .btn-register-auditee {
+            background-color: #28a745;
+            color: #fff;
+        }
+
+        /* Login button */
+        .btn-login {
+            background-color: #17a2b8;
+            color: #fff;
+        }
+
+        /* Logout button */
+        .btn-logout {
+            background-color: #dc3545;
+            color: #fff;
+        }
+
+        /* Add icon styles */
+        .btn i {
+            margin-right: 8px;
+        }
+
+        /* Add hover effect */
+        .btn:hover {
+            filter: brightness(90%);
+        }
+    </style>
+</head>
+<body>
+<!--<img class="brand-logo" src="{% static 'staticfiles/logo2.png'%}" alt="Logo">-->
+<h1>SAudit </h1>
+
+<!-- Example in a template -->
+<a href="{% url 'register_auditor' %}" class="btn btn-register-auditor"><i class="fas fa-user"></i> Register as Auditor</a>
+<a href="{% url 'register_auditee' %}" class="btn btn-register-auditee"><i class="fas fa-user"></i> Register as Auditee</a>
+<a href="{% url 'login' %}" class="btn btn-login"><i class="fas fa-sign-in-alt"></i> Login</a>
+<a href="{% url 'logout' %}" class="btn btn-logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+
+</body>
+</html>

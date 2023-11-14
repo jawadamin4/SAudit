@@ -1,5 +1,5 @@
 from .models import AuditInProgress, AuditPorgram, InformationRequired
-from django.db.models.signals import post_save, pre_save
+from django.db.models.signals import post_save, pre_save, m2m_changed
 from django.dispatch import receiver
 from django.core.mail import send_mail
 from django.conf import settings
@@ -21,10 +21,11 @@ def create_audit_departments(sender, instance, created, **kwargs):
                                         response_action=response_action, audit_procedure=audit_procedure, )
 
 
-@receiver(post_save, sender=AuditPorgram)
-def send_information_required_email(sender, instance, created, **kwargs):
-    # Send an email to the auditee
-    instance.send_information_required_email()
+@receiver(m2m_changed, sender=AuditPorgram.information_required.through)
+def send_information_required_email_on_change(sender, instance, action, **kwargs):
+    if action == 'post_add' or action == 'post_remove' or action == 'post_clear':
+        # Send an email to the auditee
+        instance.send_information_required_email()
 
 
 def send_auditor_comment_notification(information_required):

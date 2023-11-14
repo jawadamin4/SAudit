@@ -48,9 +48,9 @@ class RiskAssessment(models.Model):
         self.branch = self.audit_universe.branch
         self.division = self.audit_universe.division
         self.department = self.audit_universe.department
-        likelihood_values = {'Very Low': 1, 'Low': 2, 'Medium': 3, 'High': 4, 'Critical': 5}
+        likelihood_values = {'Rare': 1, 'Unlikely': 2, 'Likely': 3, 'Possible': 4, 'Certain': 5}
         likelihood_value = likelihood_values.get(self.likelihood, 0)
-        impact_values = {'Rare': 1, 'Unlikely': 2, 'Likely': 3, 'Possible': 4, 'Certain': 5}
+        impact_values = {'Very Low': 1, 'Low': 2, 'Medium': 3, 'High': 4, 'Critical': 5}
         impact_value = impact_values.get(self.impact, 0)
         risk_score = likelihood_value + impact_value
         self.risk_score = str(risk_score)

@@ -110,6 +110,6 @@ class AuditPorgram(models.Model):
 
 class ChatMessage(models.Model):
     room_name = models.CharField(max_length=100)
-    sender = models.ForeignKey(Auditor, on_delete=models.CASCADE)
+    sender = models.ForeignKey(User, on_delete=models.CASCADE)
     content = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)

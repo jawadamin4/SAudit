@@ -23,6 +23,7 @@ from fieldwork2.views import upload_requirements, upload_success
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("", include("fieldwork2.urls")),
+    path("", include("audit_plan_setup.urls")),
     path('upload-requirements/<int:audit_program_id>/', upload_requirements, name='upload_requirements'),
     path('upload-requirements/<int:audit_program_id>/upload_success/',upload_success, name='upload_success'),
 ]
