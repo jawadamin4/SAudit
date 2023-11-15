@@ -6,7 +6,6 @@ from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from Saudit.settings import EMAIL_HOST_USER
 from .models import ChatMessage,ConnectedUser
-import httpx
 from audit_plan_setup.models import Auditor, Auditee
 
 
