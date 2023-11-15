@@ -1,91 +1,105 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<style>
-    /* Chat container styles */
-    .chat-container {
-        width: 80%;
-        margin: 0 auto;
-        padding: 20px;
-        background: linear-gradient(90deg, rgba(102,191,63,1) 0%, rgba(99,130,98,1) 60%);
-        border: 1px solid #ccc;
-        border-radius: 5px;
-    }
+    <style>
+        /* Chat container styles */
+        .chat-container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(90deg, rgba(102, 191, 63, 1) 0%, rgba(99, 130, 98, 1) 60%);
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
 
-    /* Chat message styles */
-    .chat-message {
-        background-color: #2196F3;
-        color: white;
-        padding: 10px;
-        margin: 10px 0;
-        border-radius: 5px;
-    }
+        /* Chat message styles */
+        .chat-message {
+            background-color: #2196F3;
+            color: white;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
 
-    /* Input and button styles */
-    .chat-input {
-        width: 100%;
-        padding: 10px;
-        margin-top: 10px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-    }
+        /* Input and button styles */
+        .chat-input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
 
-    .chat-button {
-        background-color: #4CAF50;
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        margin-top: 10px;
-        border-radius: 5px;
-        cursor: pointer;
-    }
+        .chat-button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin-top: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
 
-    .default-message {
-        padding: 10px;
-        margin: 10px 0;
-        border-radius: 5px;
-        background-color: #E5E5E5;
-    }
+        .mention-suggestion {
+            cursor: pointer;
+            padding: 5px;
+            margin: 5px 0;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+        }
 
-    /* Style for messages from user1 */
-    .user1-message {
-        padding: 10px;
-        margin: 10px 0;
-        border-radius: 5px;
-        background-color: #00A1E0;
-        color: white;
-    }
+        .mention-suggestion:hover {
+            background-color: #e0e0e0;
+        }
 
-    /* Style for messages from user2 */
-    .user2-message {
-        padding: 10px;
-        margin: 10px 0;
-        border-radius: 5px;
-        background-color: #FFD700;
-        color: black;
-    }
+        .default-message {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            background-color: #E5E5E5;
+        }
 
-    /* Styles for usernames */
-    .username {
-        font-weight: bold;
-        margin-top: 5px;
-    }
+        /* Style for messages from user1 */
+        .user1-message {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            background-color: #00A1E0;
+            color: white;
+        }
 
-    /* Scrollable chat container for older messages */
-    .chat-scroll-container {
-        height: 250px;
-        overflow-y: auto;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        padding: 10px;
-    }
-</style>
+        /* Style for messages from user2 */
+        .user2-message {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            background-color: #FFD700;
+            color: black;
+        }
+
+        /* Styles for usernames */
+        .username {
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        /* Scrollable chat container for older messages */
+        .chat-scroll-container {
+            height: 250px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+        }
+    </style>
 </head>
+
 <body>
     <div class="chat-container">
         <center>
-            <h1>  Saudit chat room </h1>
-<!--                {{ request.user.username }}</h1>-->
+            <h1>Saudit chat room</h1>
+            <!-- {{ request.user.username }}</h1>-->
         </center>
         <br>
         {% if request.user.is_authenticated %}
@@ -102,82 +116,132 @@
             <br />
             <div id="room-name" style="display: none;">{{ room_name }}</div>
             <input type="text" id="id_message_send_input" class="chat-input" placeholder="Type your message...">
-            <button type="submit" id="id_message_send_button" class="chat-button">Send Messagea</button>
+            <div id="mentionSuggestions"></div>
+            <button type="submit" id="id_message_send_button" class="chat-button">Send Message</button>
         </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const roomName = document.querySelector('#room-name').textContent;
-            const chatSocket = new WebSocket(
-                `wss://${window.location.host}/ws/chat/${roomName}/`
-            );
+    const roomName = document.querySelector('#room-name').textContent;
+    const chatSocket = new WebSocket(
+        `ws://${window.location.host}/ws/chat/${roomName}/`
+    );
 
-            let messageContainer = document.querySelector('#id_chat_item_container');
-            let oldestMessageId = null;
+    let messageContainer = document.querySelector('#id_chat_item_container');
+    let oldestMessageId = null;
 
-            chatSocket.onopen = function (e) {
-                console.log('The connection was set up successfully!');
-            };
+    chatSocket.onopen = function (e) {
+        console.log('The connection was set up successfully!');
+    };
 
-            chatSocket.onclose = function (e) {
-                console.log('Something unexpected happened!');
-            };
+    chatSocket.onclose = function (e) {
+        console.log('Something unexpected happened!');
+    };
 
-            document.querySelector('#id_message_send_input').focus();
+    document.querySelector('#id_message_send_input').focus();
 
-            document.querySelector('#id_message_send_input').onkeyup = function (e) {
-                if (e.keyCode == 13) {
-                    document.querySelector('#id_message_send_button').click();
-                }
-            };
+    document.querySelector('#id_message_send_input').onkeyup = function (e) {
+        const suggestionsContainer = document.getElementById('mentionSuggestions');
 
-            document.querySelector("#id_message_send_button").onclick = function (e) {
-                var messageInput = document.querySelector("#id_message_send_input").value;
-                chatSocket.send(JSON.stringify({ message: messageInput, username: "{{name}}" }));
-            };
+        if (e.keyCode == 13) {
+            document.querySelector('#id_message_send_button').click();
+        } else if (e.key === '@') {
+            const query = document.querySelector('#id_message_send_input').value.split('@').pop();
+            fetchMentionSuggestions(query);
+        } else if (!document.querySelector('#id_message_send_input').value.includes('@')) {
+            // '@' symbol is removed, hide the suggestions container
+            suggestionsContainer.style.display = 'none';
+        }
+    };
 
-            // Function to get a CSS class based on the username
-            function getUserClass(username) {
-                // Replace 'username' with the actual username
-                switch (username) {
-                    case '{{request.user.username}}':
-                        return 'user1-message';
-                    case 'username2':
-                        return 'user2-message';
-                    default:
-                        return 'default-message';
-                }
-            }
+    document.querySelector("#id_message_send_button").onclick = function (e) {
+        var messageInput = document.querySelector("#id_message_send_input").value;
+        chatSocket.send(JSON.stringify({ message: messageInput, username: "{{name}}" }));
+        document.querySelector('#id_message_send_input').value = ''; // Clear input after sending
+    };
 
-            function createChatMessage(username, message) {
-                const chatMessage = document.createElement('div');
-                chatMessage.textContent = `${username}: ${message}`;
-                return chatMessage;
-            }
+    // Function to get a CSS class based on the username
+    function getUserClass(username) {
+        // Replace 'username' with the actual username
+        switch (username) {
+            case '{{request.user.username}}':
+                return 'user1-message';
+            case 'username2':
+                return 'user2-message';
+            default:
+                return 'default-message';
+        }
+    }
 
-            chatSocket.onmessage = function (e) {
-                const data = JSON.parse(e.data);
-                if (data.load_more) {
-                    oldestMessageId = data.oldest_message_id;
-                    const olderMessagesContainer = document.querySelector('#older-messages');
-                    olderMessagesContainer.innerHTML = data.messages.join('');
-                } else {
-                    const chatMessage = createChatMessage(data.username, data.message);
+    function createChatMessage(username, message) {
+        const chatMessage = document.createElement('div');
+        chatMessage.textContent = `${username}: ${message}`;
+        return chatMessage;
+    }
 
-                    // Assign a CSS class based on the username
-                    chatMessage.classList.add(getUserClass(data.username));
+    function updateMentionSuggestionsUI(suggestions) {
+    const suggestionsContainer = document.getElementById('mentionSuggestions');
+    suggestionsContainer.innerHTML = '';
 
-                    // Add the message to the top of the container
-                    messageContainer.insertBefore(chatMessage, messageContainer.firstChild);
+    suggestions.forEach((mention) => {
+        const mentionDiv = document.createElement('div');
+        mentionDiv.classList.add('mention-suggestion');
+        mentionDiv.textContent = mention;
 
-<!--                    // Limit the container to the latest 10 messages-->
-<!--                    if (messageContainer.children.length > 10) {-->
-<!--                        messageContainer.removeChild(messageContainer.lastChild);-->
-<!--                    }-->
-                }
-            };
-        });
+        mentionDiv.onclick = function () {
+            // Insert the selected mention into the input field
+            const inputElement = document.getElementById('id_message_send_input');
+            const inputValue = inputElement.value;
+            const mentionIndex = inputValue.lastIndexOf('@');
+            const updatedValue =
+                inputValue.substring(0, mentionIndex + 1) + mention + ' ';
+            inputElement.value = updatedValue;
+
+            // Clear the mention suggestions
+            suggestionsContainer.innerHTML = '';
+            suggestionsContainer.style.display = 'none'; // Hide the suggestions container after selection
+        };
+
+        suggestionsContainer.appendChild(mentionDiv);
+    });
+
+    // Display the suggestions container
+    suggestionsContainer.style.display = 'block';
+}
+
+
+
+    // Function to fetch mention suggestions
+    async function fetchMentionSuggestions(query) {
+        try {
+            // Make a WebSocket request to the server to fetch mention suggestions
+            chatSocket.send(JSON.stringify({ type: 'mention.suggestions', query: query }));
+        } catch (error) {
+            console.error('Error fetching mention suggestions:', error);
+        }
+    }
+
+    chatSocket.onmessage = function (e) {
+        const data = JSON.parse(e.data);
+        if (data.type === 'mention.suggestions') {
+            // Handle mention suggestions here
+            const suggestions = data.suggestions;
+            updateMentionSuggestionsUI(suggestions);
+        } else {
+            // Handle other types of messages
+            const chatMessage = createChatMessage(data.username, data.message);
+
+            // Assign a CSS class based on the username
+            chatMessage.classList.add(getUserClass(data.username));
+
+            // Add the message to the top of the container
+            messageContainer.insertBefore(chatMessage, messageContainer.firstChild);
+        }
+    };
+});
+
     </script>
 </body>
+
 </html>
