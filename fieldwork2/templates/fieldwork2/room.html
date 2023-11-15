@@ -125,7 +125,7 @@
         document.addEventListener('DOMContentLoaded', function () {
     const roomName = document.querySelector('#room-name').textContent;
     const chatSocket = new WebSocket(
-        `ws://${window.location.host}/ws/chat/${roomName}/`
+        `wss://${window.location.host}/ws/chat/${roomName}/`
     );
 
     let messageContainer = document.querySelector('#id_chat_item_container');
